@@ -4,16 +4,37 @@ import {
     Platform,
     SafeAreaView,
     StatusBar,
-    StyleSheet,
+    FlatList,
     Text,
-    View,
+    TextInput,
+    ScrollView,
+    View, Modal, TextInputComponent,
 } from 'react-native';
-import Card from "./components/Card";
-import Button from "./components/Button";
-import {ScrollView} from "nativewind/dist/preflight";
+
+import Button from "./src/components/Button";
+
+import Login from "./src/screens/Login";
+
+import {NativeRouter, createMemoryRouter, Link, Route, RouterProvider} from "react-router-native";
 
 const STYLES = ['default', 'dark-content', 'light-content'];
 const TRANSITIONS = ['fade', 'slide', 'none'];
+
+const router = createMemoryRouter([
+    {
+        path: "/",
+        element: (
+            <div>
+                <h1>Hello World</h1>
+                <Link to="about">About Us</Link>
+            </div>
+        ),
+    },
+    {
+        path: "about",
+        element: <div>About</div>,
+    },
+]);
 
 const App = () => {
 
@@ -45,10 +66,10 @@ const App = () => {
 
 
     const [posts, setPosts] = useState([]);
+    const [isOpenModal, setOpenModal] = useState(false);
+
 
     useEffect(() => {
-
-
         (async function(){
             let posts = await getPosts()
             setPosts(posts)
@@ -71,6 +92,27 @@ const App = () => {
             });
     };
 
+
+    function handleChange(e){
+        console.log(e)
+    }
+
+    function handleLoadMore(){
+        console.log("click")
+    }
+
+    function handleAddNew(){
+        console.log("new added")
+        setPosts((prev)=>([
+            {title: "New item", id: new Date(), body: "jkdsdhf"},
+            ...prev
+        ]))
+    }
+
+    function handleToggleModal(){
+        setOpenModal(!isOpenModal)
+    }
+
     return (
         <SafeAreaView>
             <StatusBar
@@ -80,43 +122,94 @@ const App = () => {
                 showHideTransition={statusBarTransition}
                 hidden={hidden}
             />
-            <View className="">
-                <Text className="font-medium text-2xl px-4 py-3">Products</Text>
-                <View className="flex " style={{display: "flex"}}>
-                    <ScrollView>
-                        {posts.slice(0, 5).map(post=>(
-                            <Card
-                                style={{margin: 10}}
-                                title={post.title}
-                                desc={post.body}
-                            ></Card>
-                        ))}
-                    </ScrollView>
 
-                </View>
-
-                <View className="flex-row">
-                    <Button title="Checkout"/>
-                    <Button title="Checkout"/>
-                    <Button title="Checkout"/>
-                    <Button title="Checkout"/>
-                </View>
+            <Login />
 
 
-                {/*<View>*/}
-                {/*    <View style={{flexDirection:'column', gap: 10, flex: 6 }}>*/}
-                {/*        <View className="bg-red-400 w-full h-20"/>*/}
-                {/*        <View className="bg-red-400 -full h-20"/>*/}
-                {/*        <View className="bg-red-400 w-full h-20"/>*/}
-                {/*        <View className="bg-red-400 w-full h-20" />*/}
-                {/*        <View className="bg-red-400 w-full h-20" />*/}
-                {/*        <View className="bg-red-400 w-full h-20" />*/}
-                {/*    </View>*/}
+            {/*<NativeRouter>*/}
+            {/*    <RouterProvider router={router} />*/}
+            {/*</NativeRouter>*/}
 
-                {/*</View>*/}
+            {/*<TextInputComponent />*/}
+
+            {/*<View className="">*/}
+            {/*    <Text className="font-medium text-2xl px-4">Products</Text>*/}
+            {/*    <View>*/}
+            {/*        <Modal  animationType="slide" animated={true} visible={isOpenModal} >*/}
+            {/*            <View className="w-full mx-auto bg-gray-100 h-full pt-20">*/}
+            {/*                <Login />*/}
+            {/*            </View>*/}
+            {/*        </Modal>*/}
 
 
-            </View>
+
+            {/*        <ScrollView className="">*/}
+
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+            {/*            /!*<Button title="Checkout"/>*!/*/}
+
+            {/*            <View className="flex flex-row items-center w-full flex-1 px-4">*/}
+            {/*                <TextInput onChangeText={handleChange} placeholder="Enter Post title" className="flex-1" />*/}
+            {/*                <Button onClick={handleToggleModal} title="Add"/>*/}
+            {/*            </View>*/}
+
+
+            {/*            /!*<FlatList*!/*/}
+            {/*            /!*        data={posts.slice(0, 10)}*!/*/}
+            {/*            /!*        renderItem={(itemData)=>{*!/*/}
+            {/*            /!*            return (*!/*/}
+            {/*            /!*                <Card key={itemData.index}*!/*/}
+            {/*            /!*                      style={{margin: 10}}*!/*/}
+            {/*            /!*                      title={itemData.item.title}*!/*/}
+            {/*            /!*                      desc={itemData.item.body}*!/*/}
+            {/*            /!*                ></Card>*!/*/}
+            {/*            /!*            )*!/*/}
+            {/*            /!*        }}>*!/*/}
+            {/*            /!*    </FlatList>*!/*/}
+
+            {/*            /!*<Button title="Load More"/>*!/*/}
+            {/*            /!*<Button title="Load More"/>*!/*/}
+            {/*            /!*<Button title="Load More" onClick={handleLoadMore}/>*!/*/}
+
+
+            {/*        </ScrollView>*/}
+
+            {/*    </View>*/}
+
+
+
+
+            {/*    /!*<View>*!/*/}
+            {/*    /!*    <View style={{flexDirection:'column', gap: 10, flex: 6 }}>*!/*/}
+            {/*    /!*        <View className="bg-red-400 w-full h-20"/>*!/*/}
+            {/*    /!*        <View className="bg-red-400 -full h-20"/>*!/*/}
+            {/*    /!*        <View className="bg-red-400 w-full h-20"/>*!/*/}
+            {/*    /!*        <View className="bg-red-400 w-full h-20" />*!/*/}
+            {/*    /!*        <View className="bg-red-400 w-full h-20" />*!/*/}
+            {/*    /!*        <View className="bg-red-400 w-full h-20" />*!/*/}
+            {/*    /!*    </View>*!/*/}
+
+            {/*    /!*</View>*!/*/}
+
+
+            {/*</View>*/}
         </SafeAreaView>
     );
 }
