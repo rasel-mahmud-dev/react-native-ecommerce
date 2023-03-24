@@ -35,6 +35,7 @@ exports.verifyAuth = async (req, res, next)=>{
 exports.login = async (req, res, next)=>{
 
     const {email, password} = req.body
+    console.log(email)
 
     try{
         let user = await User.findOne({email})
@@ -56,6 +57,7 @@ exports.login = async (req, res, next)=>{
 
 
     } catch(ex){
+        console.log(ex)
         next(ex)
     }
 }

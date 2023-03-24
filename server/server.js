@@ -1,6 +1,9 @@
 const express = require("express")
 const morgan = require("morgan")
 const app = express()
+
+require("dotenv").config()
+
 app.use(express.json())
 app.use(morgan("dev"))
 
@@ -10,27 +13,34 @@ const routes = require("./routes");
 app.use(routes)
 
 
-app.get("/", (req, res)=>{
+app.get("/", (req, res) => {
     res.send("hi")
 })
 
 
-app.use((err, req, res, next)=>{
+app.use((err, req, res, next) => {
     let status = err.status || 500
 
-    res.send(status).json({
-        message: err.message || "Internal Error"
+    let message = "Internal Error"
+    if (typeof err === "string") {
+        message = err
+    } else if (typeof err?.message === "string") {
+        message = err.message
+    }
+
+
+    return res.status(status).json({
+        message: message
     })
 })
 
 
+const PORT = process.env.PORT || 9000
 
-const PORT  = process.env.PORT || 2000
-
-mongoose.connect("mongodb://127.0.0.1:27017/redis-management").then(()=>{
+mongoose.connect(process.env.MONGODB_URL).then(() => {
     console.log("mongodb connected")
-}).catch((ex)=>{
+}).catch((ex) => {
     console.log(ex, "sdfkj")
 })
 
-app.listen(PORT, ()=> console.log(`server is running on port ${PORT}`)  )
+app.listen(PORT, () => console.log(`server is running on port ${PORT}`))

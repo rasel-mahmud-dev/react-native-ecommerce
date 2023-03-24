@@ -1,4 +1,4 @@
-const Database = require("../models/Database");
+const Database = require("../models/Product");
 const redisConnections = require("../utils/redisConnections")
 
 const redisClient  = {}

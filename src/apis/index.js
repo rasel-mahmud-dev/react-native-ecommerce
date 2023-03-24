@@ -1,4 +1,4 @@
-const backend  = "http://localhost:2000"
+const backend  = "http://192.168.2.177:9000"
 
 import axios from "axios"
 
