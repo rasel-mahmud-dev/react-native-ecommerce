@@ -5,6 +5,8 @@ import api from "../apis";
 import useHttpStatus from "../../src/hooks/useHttpStatus";
 import Colors from "../colors";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import {useDispatch} from "react-redux";
+import {registrationAction} from "../store/actions/authAction";
 
 
 // const loginImage = require('../../src/assets/login.png')
@@ -23,26 +25,30 @@ const Register = ({navigation}) => {
         password: ""
     })
 
+    const dispatch = useDispatch()
+
     function handleChange(name, value) {
         setUserData((prev) => ({
             ...prev, [name]: value
         }))
     }
 
-    async function handleLogin() {
+    async function handleRegister() {
         setStatus(true, "")
-        try {
-            let {data, status} = await api.post("/api/auth/login", {
-                email: userData.email, password: userData.password,
+        dispatch(registrationAction({
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            password: userData.password,
+        })).unwrap()
+            .then(() => {
+                setStatus(undefined, "success", false)
+            }).catch(ex => {
+            setStatus(undefined, ex, false)
+        })
+            .finally(() => {
+                setStatus(false)
             })
-
-        } catch (ex) {
-            let message = ex?.response?.data?.message || "Network Error"
-            setStatus(false, message, false)
-
-        } finally {
-            setStatus(false)
-        }
     }
 
 
@@ -115,7 +121,7 @@ const Register = ({navigation}) => {
                     <Text onPress={() => navigation.navigate("Login")}>Login</Text>
                 </View>
 
-                <Button onPress={handleLogin} style={{margin: 20}}> Login Now </Button>
+                <Button onPress={handleRegister} style={{margin: 20}}> Login Now </Button>
 
             </View>
         </View>

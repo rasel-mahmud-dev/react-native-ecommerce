@@ -6,8 +6,8 @@ const Button = (props) => {
     return (
         <Pressable onPress={props.onPress}>
             <View android_ripple={{color: Colors.primary100}}
-                  className={`py-3 px-5  text-white ${props.className}`}
-                  style={styles.btn}>
+                  className={`text-white ${props.className}`}
+                  style={{...styles.btn, ...props.style}}>
                 <Text className="text-white font-semibold">{props.children}</Text>
             </View>
         </Pressable>
@@ -17,10 +17,13 @@ const Button = (props) => {
 
 const styles = StyleSheet.create({
     btn: {
-        borderRadius: 100,
+        borderRadius: 12,
         backgroundColor: Colors.primary400,
         shadowColor: Colors.primary600,
         shadowOpacity: 1,
+        paddingHorizontal: 39,
+        paddingVertical: 10,
+        alignSelf: "flex-start",
         shadowOffset: 100,
         shadowRadius: 100
     }

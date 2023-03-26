@@ -16,6 +16,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.2",
     "morgan": "^1.10.0",
-    "redis": "^4.6.5"
+    "redis": "^4.6.5",
+    "slugify": "^1.6.5"
   }
 }

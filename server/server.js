@@ -7,6 +7,9 @@ require("dotenv").config()
 app.use(express.json())
 app.use(morgan("dev"))
 
+app.use(express.static("static"))
+app.use(express.json())
+
 const mongoose = require("mongoose");
 const routes = require("./routes");
 
@@ -28,10 +31,7 @@ app.use((err, req, res, next) => {
         message = err.message
     }
 
-
-    return res.status(status).json({
-        message: message
-    })
+    return res.status(500).send({message})
 })
 
 

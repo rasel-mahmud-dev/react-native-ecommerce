@@ -7,7 +7,6 @@ const User = require("../models/User");
 exports.verifyAuth = async (req, res, next)=>{
 
     let token = req.headers["token"] || ""
-
     try{
 
         let data = jwt.decode(token, process.env.JWT_SECRET)
@@ -22,7 +21,7 @@ exports.verifyAuth = async (req, res, next)=>{
 
         user._doc["password"] = null
 
-        res.status(201).json({
+        res.status(200).json({
             ...user._doc
         })
 
@@ -35,7 +34,6 @@ exports.verifyAuth = async (req, res, next)=>{
 exports.login = async (req, res, next)=>{
 
     const {email, password} = req.body
-    console.log(email)
 
     try{
         let user = await User.findOne({email})
@@ -47,7 +45,7 @@ exports.login = async (req, res, next)=>{
             return next("Sorry, Password doesn't match")
         }
 
-        let token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: "1h"})
+        let token = jwt.sign({_id: user._id, role: "ADMIN"}, process.env.JWT_SECRET, {expiresIn: "1h"})
         user._doc["password"] = null
 
         res.status(201).json({
@@ -57,7 +55,6 @@ exports.login = async (req, res, next)=>{
 
 
     } catch(ex){
-        console.log(ex)
         next(ex)
     }
 }
@@ -65,7 +62,7 @@ exports.login = async (req, res, next)=>{
 
 exports.register = async (req, res, next)=>{
 
-    const {email, password, username} = req.body
+    const {firstName, lastName, email, password} = req.body
 
     try{
         let user = await User.findOne({email})
@@ -74,7 +71,8 @@ exports.register = async (req, res, next)=>{
         }
 
         let newUser = new User({
-            username,
+            firstName,
+            lastName,
             email,
             password
         })

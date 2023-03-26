@@ -6,7 +6,10 @@ import useHttpStatus from "../../src/hooks/useHttpStatus";
 import Colors from "../colors";
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {loginAction} from "../store/actions/authAction";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+
+
+
 
 
 // const loginImage = require('../../src/assets/login.png')
@@ -15,6 +18,10 @@ import {useDispatch} from "react-redux";
 const Login = ({navigation}) => {
 
     const screenWidth = Dimensions.get("window").width
+
+    const authState = useSelector(state=>state)
+
+
 
 
     const dispatch = useDispatch()
@@ -39,13 +46,12 @@ const Login = ({navigation}) => {
             email: userData.email,
             password: userData.password,
         })).unwrap().then(res => {
-            navigation.navigate("Home")
+            // navigation.navigate("Home")
         }).catch(ex => {
             setStatus(undefined, ex, false)
         }).finally(() => {
             setStatus(false)
         })
-
     }
 
 

@@ -1,42 +1,62 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
-/**
- *
- * @returns {({isLoading: boolean, message: string, isSuccess: boolean}|setStatus|resetStatus)[]}
- */
+
 function useHttpStatus() {
 
     const [status, _setStatus] = useState({
         isLoading: false,
         message: "",
-        isSuccess: false
+        isSuccess: false,
     })
 
+    const objectStatus = {
+        set isLoading(value) {
+            _setStatus(prev => ({
+                ...prev,
+                isLoading: value
 
-    /**
-     *
-     * @param isLoading
-     * @param message
-     * @param isSuccess
-     */
-    function setStatus(isLoading = undefined, message = undefined,  isSuccess = undefined) {
-        _setStatus(prev => ({
-            ...prev,
-            isLoading: isLoading !== undefined ? isLoading : prev.isLoading,
-            message: message !== undefined ? message : prev.message,
-            isSuccess: isSuccess !== undefined ? isSuccess : prev.isSuccess,
-        }))
+            }))
+        },
+        get isLoading() {
+            return status.isLoading
+        },
+
+
+        set message(value) {
+            _setStatus(prev => ({
+                ...prev,
+                message: value
+
+            }))
+        },
+        get message() {
+            return status.message
+        },
+
+        set isSuccess(value) {
+            _setStatus(prev => ({
+                ...prev,
+                isSuccess: value
+
+            }))
+        },
+        get isSuccess() {
+            return status.isSuccess
+        },
+
+        reset() {
+            _setStatus({
+                isLoading: false,
+                message: "",
+                isSuccess: false
+            })
+        }
     }
 
-    function resetStatus() {
-        _setStatus({
-            isLoading: false,
-            message: "",
-            isSuccess: false
-        })
-    }
 
-    return [status, setStatus, resetStatus]
+
+
+    return objectStatus
 }
 
 export default useHttpStatus
