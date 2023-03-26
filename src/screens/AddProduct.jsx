@@ -8,41 +8,42 @@ import {addProductAction} from "../store/actions/productAction";
 import Colors from "../colors";
 import TopHeader from "../components/TopHeader";
 import AppPicker from "../components/AppPicker";
+import {Formik} from "formik";
+import AppTextInput from "../components/AppTextInput";
+import ImageInputList from "../components/Images/ImageInputList";
+import * as Yup from "yup"
+import AppForm from "../components/Forms/AppForm";
+import FormSubmit from "../components/Forms/FormSubmit";
+import AppFormField from "../components/Forms/AppFormField";
+import AppFormPicker from "../components/Forms/AppFormPicker";
 
 const AddProduct = ({navigation}) => {
 
-    const [newProduct, setNewProduct] = useState({
-        title: "",
-        price: 0,
-        stock: 1,
-
-    })
-
     const dispatch = useDispatch()
-
-    function handleChange(name, value) {
-        setNewProduct((prev) => ({
-            ...prev,
-            [name]: value
-        }))
-    }
 
     const status = useHttpStatus()
 
+    const validationSchema = Yup.object().shape({
+        title: Yup.string().required().min(10).max(300).label("Title"),
+        category: Yup.object().required().nullable().label("Category"),
+        price: Yup.number().required().min(0).label("Price"),
+        stock: Yup.number().required().min(1).label("Stock"),
+    })
 
     function handleSave(e) {
-        status.isLoading = true
-        dispatch(addProductAction(newProduct)).unwrap()
-            .then(() => {
-                status.message = "done"
-            })
-            .catch((ex) => {
-                status.message = ex
-                status.isSuccess = false
-            })
-            .finally(() => {
-                status.isLoading = false
-            })
+        console.log(e)
+        // status.isLoading = true
+        // dispatch(addProductAction(newProduct)).unwrap()
+        //     .then(() => {
+        //         status.message = "done"
+        //     })
+        //     .catch((ex) => {
+        //         status.message = ex
+        //         status.isSuccess = false
+        //     })
+        //     .finally(() => {
+        //         status.isLoading = false
+        //     })
     }
 
     const [category, setCategory] = useState(null)
@@ -69,7 +70,7 @@ const AddProduct = ({navigation}) => {
     return (
         <View className="">
             <TopHeader title="Back Profile" onAction={() => navigation.navigate("Profile")}/>
-            <View className="py-10">
+            <View className="py-6">
 
                 <Text className="font-semibold text-2xl text-center">Add Product</Text>
 
@@ -81,49 +82,52 @@ const AddProduct = ({navigation}) => {
 
                 <View className="mt-4 px-4">
 
-                    <View className="mt-4">
-                        <Text className="text-lg font-medium">Title</Text>
-                        <TextInput
-                            value={newProduct.title}
-                            onChangeText={(value) => handleChange("title", value)}
-                            className="border border-blue-500/80 py-1 rounded-lg px-2 text-gray-800"
-                            placeholder="Enter title"/>
-                    </View>
+                    <AppForm validationSchema={validationSchema} onSubmit={handleSave} initialValues={{
+                        title: "",
+                        price: 0,
+                        stock: 0,
+                        category: null
+                    }}>
+                        <>
+                            <AppFormField
+                                maxLength={255}
+                                icon="cube"
+                                placeholder="Title"
+                                name="title"
+                            />
 
+                            <AppFormPicker
+                                data={categories}
+                                labelKeyName="name"
+                                name="category"
+                                icon="apps"
+                                placeholder="Category"
+                            />
 
-                    <AppPicker
-                        data={categories}
-                        onSelectItem={(item)=>setCategory(item)}
-                        label="name"
-                        selectedItem={category}
-                        icon="apps"
-                        placeholder="Category"
-                    />
+                            <AppFormField
+                                icon="cube"
+                                keyboardType="numeric"
+                                placeholder="Price"
+                                name="price"
+                            />
 
+                            <AppFormField
+                                icon="cube"
+                                placeholder="Stock"
+                                keyboardType="numeric"
+                                name="stock"
+                            />
+                            <FormSubmit style={{
+                                marginTop: 10,
+                                paddingVertical: 14,
+                                borderRadius: 100,
+                                justifyContent: "center"
+                            }} title="Add"/>
+                        </>
 
+                        {/*<ImageInputList imageUris={} onAddImage={} onRemoveImage={} />*/}
 
-                    <View className="mt-4">
-                        <Text className="text-lg font-medium">Price</Text>
-                        <TextInput
-                            value={newProduct.price}
-                            onChangeText={(value) => handleChange("price", value)}
-                            className="border border-blue-500/80 py-1 rounded-lg px-2 text-gray-800"
-                            placeholder="Enter price"/>
-                    </View>
-
-
-                    <View className="mt-4">
-                        <Text className="text-lg font-medium">Stock</Text>
-                        <TextInput
-                            value={newProduct.stock}
-                            onChangeText={(value) => handleChange("stock", value)}
-                            className="border border-blue-500/80 py-1 rounded-lg px-2 text-gray-800"
-                            placeholder="Number of stock"/>
-                    </View>
-
-
-                    <Button onPress={handleSave} style={{marginTop: 10, borderRadius: 12}}>Add</Button>
-
+                    </AppForm>
                 </View>
 
             </View>

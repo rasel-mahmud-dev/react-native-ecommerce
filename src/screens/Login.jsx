@@ -10,7 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 
 
 import { Formik } from 'formik';
-import AppTextInput from "../components/Forms/AppTextInput";
+import AppTextInput from "../components/AppTextInput";
 import AppPicker from "../components/AppPicker";
 
 

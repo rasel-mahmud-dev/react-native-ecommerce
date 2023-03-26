@@ -13,6 +13,18 @@ const Colors = {
     secondary: "#39ec2c",
 
 
+    red10: "#a9c3ff",
+    red50: "#8eb1ff",
+    red100: "#75a0ff",
+    red200: "#5f8efc",
+    red300: "#4b80fa",
+    red400: "#E81C1CCC",
+    red500: "rgba(217,15,15,0.8)",
+    red600: "#1e55d7",
+    red700: "#174bc4",
+    red800: "#0f43bb",
+    red900: "#0135b0",
+
 
     c0: "#ffffff",
     c1: "#fcfcfc",
