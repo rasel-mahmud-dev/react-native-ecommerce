@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {addProductAction} from "../store/actions/productAction";
 import Colors from "../colors";
 import TopHeader from "../components/TopHeader";
+import AppPicker from "../components/AppPicker";
 
 const AddProduct = ({navigation}) => {
 
@@ -44,6 +45,26 @@ const AddProduct = ({navigation}) => {
             })
     }
 
+    const [category, setCategory] = useState(null)
+
+    const [categories, setCategories] = useState([
+        {name: "Clothes", id: '234'},
+        {name: "Electronics", id: '234'},
+        {name: "Toys", id: '234'},
+        {name: "Clothes", id: '234'},
+        {name: "Electronics", id: '234'},
+        {name: "Toys", id: '234'},
+        {name: "Clothes", id: '234'},
+        {name: "Electronics", id: '234'},
+        {name: "Toys", id: '234'},
+        {name: "Clothes", id: '234'},
+        {name: "Electronics", id: '234'},
+        {name: "Toys", id: '234'},
+        {name: "Clothes", id: '234'},
+        {name: "Electronics", id: '234'},
+        {name: "Toys", id: '234'},
+    ])
+
 
     return (
         <View className="">
@@ -68,6 +89,18 @@ const AddProduct = ({navigation}) => {
                             className="border border-blue-500/80 py-1 rounded-lg px-2 text-gray-800"
                             placeholder="Enter title"/>
                     </View>
+
+
+                    <AppPicker
+                        data={categories}
+                        onSelectItem={(item)=>setCategory(item)}
+                        label="name"
+                        selectedItem={category}
+                        icon="apps"
+                        placeholder="Category"
+                    />
+
+
 
                     <View className="mt-4">
                         <Text className="text-lg font-medium">Price</Text>

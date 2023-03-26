@@ -6,6 +6,8 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {getAllCategories, getAllProductAction} from "../store/actions/productAction";
 import Colors from "../colors";
 import {clearProducts} from "../store/slices/productSlice"
+import ImageInput from "../components/Images/ImageInput";
+import ImageInputList from "../components/Images/ImageInputList";
 
 const Home = ({navigation}) => {
 
@@ -36,11 +38,27 @@ const Home = ({navigation}) => {
         dispatch(getAllProductAction())
     }
 
+    const [imageUris, setImageUris] = useState([])
+
+
+    function handleAddImage(uri){
+        setImageUris([...imageUris, uri])
+    }
+    function handleRemoveImage(uri){
+        setImageUris(imageUris.filter(imageUri=>imageUri !== uri))
+    }
+
     return (
         <View>
 
             {/*<Button onPress={()=>navigation.navigate("Profile")}>Profile</Button>*/}
             {/*<Button onPress={()=>navigation.navigate("Add-Product")}>Add</Button>*/}
+
+            <ImageInputList
+                imageUris={imageUris}
+                onAddImage={handleAddImage}
+                onRemoveImage={handleRemoveImage}
+            />
 
             <View className="my-4">
 
@@ -48,43 +66,45 @@ const Home = ({navigation}) => {
                 {/*    ({products.length})*/}
                 {/*</Text>*/}
 
+
+
                 <View className="mx-2">
 
 
-                <View>
-                    {categories?.map((category)=>(
-                        <View>
-                            <Text>{category.name}</Text>
-                        </View>
-                    ))}
-                </View>
+                {/*<View>*/}
+                {/*    {categories?.map((category)=>(*/}
+                {/*        <View>*/}
+                {/*            <Text>{category.name}</Text>*/}
+                {/*        </View>*/}
+                {/*    ))}*/}
+                {/*</View>*/}
 
 
 
-                    <FlatList renderItem={({item, index}) => (
-                        <View style={styles.grid}
-                              key={index}>
-                            <Pressable style={styles.btn} android_ripple={{color: Colors.primary100}} onPress={handleGoDetail}>
-                                <View className="flex-1">
-                                    <Image style={{width: 100, height: 100}}  source={{
-                                        uri: fullImagePath(item.image)
-                                    }}/>
-                                </View>
+                    {/*<FlatList renderItem={({item, index}) => (*/}
+                    {/*    <View style={styles.grid}*/}
+                    {/*          key={index}>*/}
+                    {/*        <Pressable style={styles.btn} android_ripple={{color: Colors.primary100}} onPress={handleGoDetail}>*/}
+                    {/*            <View className="flex-1">*/}
+                    {/*                <Image style={{width: 100, height: 100}}  source={{*/}
+                    {/*                    uri: fullImagePath(item.image)*/}
+                    {/*                }}/>*/}
+                    {/*            </View>*/}
 
-                                <View className="mt-2">
-                                    <Text style={{color: Colors.c800}}>{item.title}</Text>
-                                    <Text style={{color: Colors.c800}}>Tk.{item.price}</Text>
-                                </View>
-                            </Pressable>
-                        </View>
-                    )}
-                              data={products}
-                              numColumns={2}
-                              refreshing={refreshing}
-                              onRefresh={handleRefresh}
-                    >
+                    {/*            <View className="mt-2">*/}
+                    {/*                <Text style={{color: Colors.c800}}>{item.title}</Text>*/}
+                    {/*                <Text style={{color: Colors.c800}}>Tk.{item.price}</Text>*/}
+                    {/*            </View>*/}
+                    {/*        </Pressable>*/}
+                    {/*    </View>*/}
+                    {/*)}*/}
+                    {/*          data={products}*/}
+                    {/*          numColumns={2}*/}
+                    {/*          refreshing={refreshing}*/}
+                    {/*          onRefresh={handleRefresh}*/}
+                    {/*>*/}
 
-                    </FlatList>
+                    {/*</FlatList>*/}
 
                 </View>
 

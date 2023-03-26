@@ -36,17 +36,11 @@ const App = () => {
         TRANSITIONS[0],
     );
 
-    const requestPermission = async ()=>{
 
-        const result = await ImagePicker.requestMediaLibraryPermissionsAsync()
-        if(!result.granted){
-            alert("You need to enable permission to access the library")
-        }
-    }
 
     useEffect( ()=>{
 
-        requestPermission()
+
 
         return ()=>{}
     }, [])
@@ -70,7 +64,7 @@ const App = () => {
             <Provider store={store}>
                 <AppWrapper>
                     <NavigationContainer>
-                        <Stack.Navigator initialRouteName="Home">
+                        <Stack.Navigator initialRouteName="Add-Product">
                             <Stack.Screen name="Home" component={MainScreen} options={{headerShown: false}}/>
                             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
                             <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>

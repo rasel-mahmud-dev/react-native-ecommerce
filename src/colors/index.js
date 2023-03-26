@@ -14,7 +14,11 @@ const Colors = {
 
 
 
-    c0: "#f5f5f5",
+    c0: "#ffffff",
+    c1: "#fcfcfc",
+    c2: "#fafafa",
+    c3: "#f6f6f6",
+    c4: "#efefef",
     c5: "#dcdcdc",
     c10: "#c7c7c7",
     c20: "#b4b4b4",

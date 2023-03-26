@@ -8,6 +8,7 @@ import {addProductAction} from "../store/actions/productAction";
 import Colors from "../colors";
 import TopHeader from "../components/TopHeader";
 import * as ImagePicker from "expo-image-picker";
+import ImageInput from "../components/Images/ImageInput";
 
 const AddCategory = ({navigation}) => {
 
@@ -89,6 +90,8 @@ const AddCategory = ({navigation}) => {
                             className="border border-blue-500/80 py-1 rounded-lg px-2 text-gray-800"
                             placeholder="Enter name"/>
                     </View>
+
+                    <ImageInput />
 
 
                     <Image source={{uri: imageUri}} style={{width: 100, height: 100}} />

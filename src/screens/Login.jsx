@@ -9,6 +9,10 @@ import {loginAction} from "../store/actions/authAction";
 import {useDispatch, useSelector} from "react-redux";
 
 
+import { Formik } from 'formik';
+import AppTextInput from "../components/Forms/AppTextInput";
+import AppPicker from "../components/AppPicker";
+
 
 
 
@@ -17,41 +21,45 @@ import {useDispatch, useSelector} from "react-redux";
 
 const Login = ({navigation}) => {
 
-    const screenWidth = Dimensions.get("window").width
+    // const screenWidth = Dimensions.get("window").width
+    //
+    // const authState = useSelector(state=>state)
+    //
+    //
+    //
+    //
+    // const dispatch = useDispatch()
+    //
+    // const [status, setStatus] = useHttpStatus()
+    //
+    // const [userData, setUserData] = useState({
+    //     email: "",
+    //     password: ""
+    // })
+    //
+    // function handleChange(name, value) {
+    //     setUserData((prev) => ({
+    //         ...prev,
+    //         [name]: value
+    //     }))
+    // }
+    //
+    // async function handleLogin() {
+    //     setStatus(true, "")
+    //     dispatch(loginAction({
+    //         email: userData.email,
+    //         password: userData.password,
+    //     })).unwrap().then(res => {
+    //         // navigation.navigate("Home")
+    //     }).catch(ex => {
+    //         setStatus(undefined, ex, false)
+    //     }).finally(() => {
+    //         setStatus(false)
+    //     })
+    // }
 
-    const authState = useSelector(state=>state)
-
-
-
-
-    const dispatch = useDispatch()
-
-    const [status, setStatus] = useHttpStatus()
-
-    const [userData, setUserData] = useState({
-        email: "",
-        password: ""
-    })
-
-    function handleChange(name, value) {
-        setUserData((prev) => ({
-            ...prev,
-            [name]: value
-        }))
-    }
-
-    async function handleLogin() {
-        setStatus(true, "")
-        dispatch(loginAction({
-            email: userData.email,
-            password: userData.password,
-        })).unwrap().then(res => {
-            // navigation.navigate("Home")
-        }).catch(ex => {
-            setStatus(undefined, ex, false)
-        }).finally(() => {
-            setStatus(false)
-        })
+    function handleSubmit(e){
+        console.log(e)
     }
 
 
@@ -60,54 +68,84 @@ const Login = ({navigation}) => {
     return (
         <View style={styles.loginContainer}>
 
-            <View style={styles.loginHeader}>
-                <View className="flex justify-center items-center">
-                    <FontAwesome name="lock" size={102} color="white" className=""/>
-                </View>
-                <Text className="text-2xl font-medium text-center text-white">Login</Text>
-            </View>
+            <Formik
+                initialValues={{ email: '' }}
+                onSubmit={values => console.log(values)}
+            >
+                {({ handleChange, handleBlur, handleSubmit, values }) => (
+                    <View style={{padding: 10}}>
+                        <AppTextInput
+                            icon="email"
+                            placeholder="Enter Email"
+                            onChangeText={handleChange('email')}
+                            onBlur={handleBlur('email')}
+                            value={values.email}
+                        />
 
+                        <AppTextInput
+                            icon="lock"
+                            placeholder="Enter Password"
+                            onChangeText={handleChange('password')}
+                            onBlur={handleBlur('password')}
+                            value={values.password}
+                        />
 
-            <View>
+                        {/*<AppPicker icon="apps" placeholder="Category" />*/}
 
-                <View className="mt-4 px-4">
-
-                    {status.isLoading && <ActivityIndicator size="small" color="#0000ff"/>}
-
-                    {status.message && (
-                        <Text className="bg-red-100 text-red-700 px-4 py-2 rounded m-10">{status.message}</Text>
-                    )}
-
-                    <View>
-                        <Text className="text-lg font-medium">Email</Text>
-                        <TextInput
-                            autoComplete="email"
-                            editable={true}
-                            value={userData.email}
-                            onChangeText={(value) => handleChange("email", value)}
-                            className="border border-blue-500/80 py-1 rounded px-2 text-gray-800"
-                            placeholder="Enter Email"/>
+                        <Button onPress={handleSubmit}>Submit</Button>
                     </View>
-                    <View className="mt-4">
-                        <Text className="text-lg font-medium">Password</Text>
-                        <TextInput
-                            value={userData.password}
-                            onChangeText={(value) => handleChange("password", value)}
-                            className="border border-blue-500/80 py-1 rounded px-2 text-gray-800"
-                            placeholder="Enter Password"/>
-                    </View>
-
-                    <View className="flex gap-x-1 items-center flex-row mt-4">
-                        <Text>Not Registered ?</Text>
-                        <Text onPress={() => navigation.navigate("Register")}>Register Now</Text>
-                    </View>
-
-                    <Button onPress={handleLogin} className="mt-10"
-                            style={{margin: 20}}> Login Now </Button>
-                </View>
+                )}
+            </Formik>
 
 
-            </View>
+            {/*<View style={styles.loginHeader}>*/}
+            {/*    <View className="flex justify-center items-center">*/}
+            {/*        <FontAwesome name="lock" size={102} color="white" className=""/>*/}
+            {/*    </View>*/}
+            {/*    <Text className="text-2xl font-medium text-center text-white">Login</Text>*/}
+            {/*</View>*/}
+
+
+            {/*<View>*/}
+
+            {/*    <View className="mt-4 px-4">*/}
+
+            {/*        {status.isLoading && <ActivityIndicator size="small" color="#0000ff"/>}*/}
+
+            {/*        {status.message && (*/}
+            {/*            <Text className="bg-red-100 text-red-700 px-4 py-2 rounded m-10">{status.message}</Text>*/}
+            {/*        )}*/}
+
+            {/*        <View>*/}
+            {/*            <Text className="text-lg font-medium">Email</Text>*/}
+            {/*            <TextInput*/}
+            {/*                autoComplete="email"*/}
+            {/*                editable={true}*/}
+            {/*                value={userData.email}*/}
+            {/*                onChangeText={(value) => handleChange("email", value)}*/}
+            {/*                className="border border-blue-500/80 py-1 rounded px-2 text-gray-800"*/}
+            {/*                placeholder="Enter Email"/>*/}
+            {/*        </View>*/}
+            {/*        <View className="mt-4">*/}
+            {/*            <Text className="text-lg font-medium">Password</Text>*/}
+            {/*            <TextInput*/}
+            {/*                value={userData.password}*/}
+            {/*                onChangeText={(value) => handleChange("password", value)}*/}
+            {/*                className="border border-blue-500/80 py-1 rounded px-2 text-gray-800"*/}
+            {/*                placeholder="Enter Password"/>*/}
+            {/*        </View>*/}
+
+            {/*        <View className="flex gap-x-1 items-center flex-row mt-4">*/}
+            {/*            <Text>Not Registered ?</Text>*/}
+            {/*            <Text onPress={() => navigation.navigate("Register")}>Register Now</Text>*/}
+            {/*        </View>*/}
+
+            {/*        <Button onPress={handleLogin} className="mt-10"*/}
+            {/*                style={{margin: 20}}> Login Now </Button>*/}
+            {/*    </View>*/}
+
+
+            {/*</View>*/}
         </View>
 
     );
