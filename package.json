@@ -22,7 +22,8 @@
     "react-native-screens": "~3.18.0",
     "react-redux": "^8.0.5",
     "react-router-native": "^6.9.0",
-    "react-native-gesture-handler": "~2.8.0"
+    "react-native-gesture-handler": "~2.8.0",
+    "expo-image-picker": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

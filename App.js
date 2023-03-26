@@ -25,6 +25,7 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {MainScreen} from "./src/screens/MainScreen";
 import AddCategory from "./src/screens/AddCategory";
+import * as ImagePicker from "expo-image-picker";
 
 
 const App = () => {
@@ -34,6 +35,21 @@ const App = () => {
     const [statusBarTransition, setStatusBarTransition] = useState(
         TRANSITIONS[0],
     );
+
+    const requestPermission = async ()=>{
+
+        const result = await ImagePicker.requestMediaLibraryPermissionsAsync()
+        if(!result.granted){
+            alert("You need to enable permission to access the library")
+        }
+    }
+
+    useEffect( ()=>{
+
+        requestPermission()
+
+        return ()=>{}
+    }, [])
 
 
     const Stack = createNativeStackNavigator();

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {ActivityIndicator, Pressable, Text, TextInput, View} from "react-native";
+import {ActivityIndicator, Image, Pressable, Text, TextInput, View} from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Button from "../components/Button";
 import useHttpStatus from "../hooks/useHttpStatus";
@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {addProductAction} from "../store/actions/productAction";
 import Colors from "../colors";
 import TopHeader from "../components/TopHeader";
+import * as ImagePicker from "expo-image-picker";
 
 const AddCategory = ({navigation}) => {
 
@@ -14,8 +15,9 @@ const AddCategory = ({navigation}) => {
         name: "",
         image: "",
         parentId: "",
-
     })
+
+    const [ imageUri, setImageUri] = useState("")
 
     const dispatch = useDispatch()
 
@@ -50,6 +52,18 @@ const AddCategory = ({navigation}) => {
         navigation.navigate("Profile")
     }
 
+
+    const selectImage = async ()=>{
+        try{
+            const result = await ImagePicker.launchImageLibraryAsync()
+            if(!result.canceled){
+                setImageUri(result.uri)
+            }
+        } catch (ex){
+            console.log("Error reading image", ex.message)
+        }
+    }
+
     return (
         <View className="">
             <TopHeader title="Go Back Profile" onAction={handleGoHOme}/>
@@ -77,7 +91,12 @@ const AddCategory = ({navigation}) => {
                     </View>
 
 
+                    <Image source={{uri: imageUri}} style={{width: 100, height: 100}} />
+                    <Button onPress={selectImage} style={{marginTop: 10, borderRadius: 12}}>Add Image</Button>
+
+
                     <Button onPress={handleSave} style={{marginTop: 10, borderRadius: 12}}>Add</Button>
+
 
                 </View>
 
