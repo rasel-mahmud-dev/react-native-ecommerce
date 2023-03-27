@@ -1,151 +1,92 @@
-import {TextInput, View, Text, SafeAreaView, ActivityIndicator, StyleSheet, Image, Dimensions} from "react-native";
-import Button from "../components/Button"
-import {useState} from "react";
-import api from "../apis";
+import { View, Text, StyleSheet, Image, Dimensions} from "react-native";
+import React, {useState} from "react";
 import useHttpStatus from "../../src/hooks/useHttpStatus";
 import Colors from "../colors";
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import {loginAction} from "../store/actions/authAction";
 import {useDispatch, useSelector} from "react-redux";
 
+import FormSubmit from "../components/Forms/FormSubmit";
+import AppForm from "../components/Forms/AppForm";
+import AppFormField from "../components/Forms/AppFormField";
+import * as Yup from "yup";
+import HttpStatus from "../components/HttpStatus";
+import TopHeader from "../components/TopHeader";
 
-import { Formik } from 'formik';
-import AppTextInput from "../components/AppTextInput";
-import AppPicker from "../components/AppPicker";
-
-
-
-
-// const loginImage = require('../../src/assets/login.png')
-//
 
 const Login = ({navigation}) => {
 
     // const screenWidth = Dimensions.get("window").width
-    //
     // const authState = useSelector(state=>state)
-    //
-    //
-    //
-    //
-    // const dispatch = useDispatch()
-    //
-    // const [status, setStatus] = useHttpStatus()
-    //
-    // const [userData, setUserData] = useState({
-    //     email: "",
-    //     password: ""
-    // })
-    //
-    // function handleChange(name, value) {
-    //     setUserData((prev) => ({
-    //         ...prev,
-    //         [name]: value
-    //     }))
-    // }
-    //
-    // async function handleLogin() {
-    //     setStatus(true, "")
-    //     dispatch(loginAction({
-    //         email: userData.email,
-    //         password: userData.password,
-    //     })).unwrap().then(res => {
-    //         // navigation.navigate("Home")
-    //     }).catch(ex => {
-    //         setStatus(undefined, ex, false)
-    //     }).finally(() => {
-    //         setStatus(false)
-    //     })
-    // }
 
-    function handleSubmit(e){
-        console.log(e)
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email().required().min(3).max(255).label("Email"),
+        password: Yup.string().required().label("Password"),
+    })
+
+    const dispatch = useDispatch()
+    const status = useHttpStatus()
+
+    async function handleLogin(userData) {
+        status.isLoading = true
+        dispatch(loginAction({
+            email: userData.email,
+            password: userData.password,
+        })).unwrap().then(res => {
+            status.message = "You are logged"
+            status.isSuccess = true
+            navigation.navigate("Home")
+        }).catch(ex => {
+            status.isSuccess = false
+            status.message = ex
+
+        }).finally(() => {
+            status.isLoading = false
+        })
     }
 
-
-    // "platforms;android-31" "system-images;android-31;google_apis_playstore;x86_64" "build-tools;31.0.2"
 
     return (
         <View style={styles.loginContainer}>
 
-            <Formik
-                initialValues={{ email: '' }}
-                onSubmit={values => console.log(values)}
-            >
-                {({ handleChange, handleBlur, handleSubmit, values }) => (
-                    <View style={{padding: 10}}>
-                        <AppTextInput
+            <TopHeader title="Back to Home" onAction={()=>navigation.navigate("Home")} />
+
+
+            <View className="p-4">
+
+                <View className="flex justify-center items-center mt-10 mb-10">
+                    <Image source={require("../../assets/login.png")} style={{width: 100, height: 120}}/>
+                    <Text className="font-bold text-2xl">Login</Text>
+                    <HttpStatus {...status} />
+                </View>
+
+
+                <AppForm
+                    validationSchema={validationSchema}
+                    onSubmit={handleLogin}
+                    initialValues={{
+                        email: "",
+                        password: "",
+                    }}>
+                    <>
+                        <AppFormField
+                            maxLength={255}
                             icon="email"
                             placeholder="Enter Email"
-                            onChangeText={handleChange('email')}
-                            onBlur={handleBlur('email')}
-                            value={values.email}
+                            name="email"
                         />
-
-                        <AppTextInput
+                        <AppFormField
+                            maxLength={255}
+                            name="password"
                             icon="lock"
                             placeholder="Enter Password"
-                            onChangeText={handleChange('password')}
-                            onBlur={handleBlur('password')}
-                            value={values.password}
                         />
 
-                        {/*<AppPicker icon="apps" placeholder="Category" />*/}
-
-                        <Button onPress={handleSubmit}>Submit</Button>
-                    </View>
-                )}
-            </Formik>
+                        <FormSubmit style={{paddingVertical: 15, marginTop: 10, borderRadius: 25}} title="Submit"/>
+                    </>
+                </AppForm>
+            </View>
 
 
-            {/*<View style={styles.loginHeader}>*/}
-            {/*    <View className="flex justify-center items-center">*/}
-            {/*        <FontAwesome name="lock" size={102} color="white" className=""/>*/}
-            {/*    </View>*/}
-            {/*    <Text className="text-2xl font-medium text-center text-white">Login</Text>*/}
-            {/*</View>*/}
-
-
-            {/*<View>*/}
-
-            {/*    <View className="mt-4 px-4">*/}
-
-            {/*        {status.isLoading && <ActivityIndicator size="small" color="#0000ff"/>}*/}
-
-            {/*        {status.message && (*/}
-            {/*            <Text className="bg-red-100 text-red-700 px-4 py-2 rounded m-10">{status.message}</Text>*/}
-            {/*        )}*/}
-
-            {/*        <View>*/}
-            {/*            <Text className="text-lg font-medium">Email</Text>*/}
-            {/*            <TextInput*/}
-            {/*                autoComplete="email"*/}
-            {/*                editable={true}*/}
-            {/*                value={userData.email}*/}
-            {/*                onChangeText={(value) => handleChange("email", value)}*/}
-            {/*                className="border border-blue-500/80 py-1 rounded px-2 text-gray-800"*/}
-            {/*                placeholder="Enter Email"/>*/}
-            {/*        </View>*/}
-            {/*        <View className="mt-4">*/}
-            {/*            <Text className="text-lg font-medium">Password</Text>*/}
-            {/*            <TextInput*/}
-            {/*                value={userData.password}*/}
-            {/*                onChangeText={(value) => handleChange("password", value)}*/}
-            {/*                className="border border-blue-500/80 py-1 rounded px-2 text-gray-800"*/}
-            {/*                placeholder="Enter Password"/>*/}
-            {/*        </View>*/}
-
-            {/*        <View className="flex gap-x-1 items-center flex-row mt-4">*/}
-            {/*            <Text>Not Registered ?</Text>*/}
-            {/*            <Text onPress={() => navigation.navigate("Register")}>Register Now</Text>*/}
-            {/*        </View>*/}
-
-            {/*        <Button onPress={handleLogin} className="mt-10"*/}
-            {/*                style={{margin: 20}}> Login Now </Button>*/}
-            {/*    </View>*/}
-
-
-            {/*</View>*/}
         </View>
 
     );

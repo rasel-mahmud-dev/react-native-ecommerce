@@ -1,78 +1,93 @@
 import React, {useState} from 'react';
-import {ActivityIndicator, Text, TextInput, View} from "react-native";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import Button from "../components/Button";
+import {ActivityIndicator, Dimensions, Image, ScrollView, StatusBar, Text, TextInput, View} from "react-native";
 import useHttpStatus from "../hooks/useHttpStatus";
-import {useDispatch} from "react-redux";
-import {addProductAction} from "../store/actions/productAction";
+import {useDispatch, useSelector} from "react-redux";
 import Colors from "../colors";
 import TopHeader from "../components/TopHeader";
-import AppPicker from "../components/AppPicker";
-import {Formik} from "formik";
-import AppTextInput from "../components/AppTextInput";
-import ImageInputList from "../components/Images/ImageInputList";
 import * as Yup from "yup"
 import AppForm from "../components/Forms/AppForm";
 import FormSubmit from "../components/Forms/FormSubmit";
 import AppFormField from "../components/Forms/AppFormField";
 import AppFormPicker from "../components/Forms/AppFormPicker";
+import AppFormImagePicker from "../components/Forms/AppFormImagePicker";
+import {addProductAction} from "../store/actions/productAction";
+import {getAllCategories} from "../store/actions/categoryAction";
+import {getAllBrandsAction} from "../store/actions/brandAction";
+
+
 
 const AddProduct = ({navigation}) => {
 
     const dispatch = useDispatch()
 
+    const {categories, brands} = useSelector(state=>state.productState)
+
     const status = useHttpStatus()
 
     const validationSchema = Yup.object().shape({
-        title: Yup.string().required().min(10).max(300).label("Title"),
+        title: Yup.string().required().min(4).max(300).label("Title"),
         category: Yup.object().required().nullable().label("Category"),
+        brand: Yup.object().required().nullable().label("Brand"),
+        thumb: Yup.string().required().label("Thumb"),
+        images: Yup.array().label("Images"),
         price: Yup.number().required().min(0).label("Price"),
         stock: Yup.number().required().min(1).label("Stock"),
     })
 
-    function handleSave(e) {
-        console.log(e)
-        // status.isLoading = true
-        // dispatch(addProductAction(newProduct)).unwrap()
-        //     .then(() => {
-        //         status.message = "done"
-        //     })
-        //     .catch((ex) => {
-        //         status.message = ex
-        //         status.isSuccess = false
-        //     })
-        //     .finally(() => {
-        //         status.isLoading = false
-        //     })
+    function handleSave(values) {
+        const { title, price, stock, thumb, category, brand, images } = values
+
+        let filename = thumb.split('/').pop();
+        let formDate = new FormData()
+
+        formDate.append("thumb", {uri: thumb,  type : 'image/jpeg', name: filename})
+        formDate.append("title", title, filename)
+
+        formDate.append("stock", stock)
+        formDate.append("price", price)
+
+        if(images && Array.isArray(images)){
+            images.forEach(img=>{
+                let name = thumb.split('/').pop();
+                formDate.append("images", {uri: img,  type : 'image/jpeg', name: name})
+            })
+        }
+
+        if(category){
+            formDate.append("category", category?._id)
+        }
+        if(brand){
+            formDate.append("brand", brand?._id)
+        }
+
+        status.isLoading = true
+        dispatch(addProductAction(formDate)).unwrap()
+            .then(() => {
+                status.message = "done"
+                navigation.navigate("Profile")
+            })
+            .catch((ex) => {
+                status.message = ex
+                status.isSuccess = false
+            })
+            .finally(() => {
+                status.isLoading = false
+            })
     }
-
-    const [category, setCategory] = useState(null)
-
-    const [categories, setCategories] = useState([
-        {name: "Clothes", id: '234'},
-        {name: "Electronics", id: '234'},
-        {name: "Toys", id: '234'},
-        {name: "Clothes", id: '234'},
-        {name: "Electronics", id: '234'},
-        {name: "Toys", id: '234'},
-        {name: "Clothes", id: '234'},
-        {name: "Electronics", id: '234'},
-        {name: "Toys", id: '234'},
-        {name: "Clothes", id: '234'},
-        {name: "Electronics", id: '234'},
-        {name: "Toys", id: '234'},
-        {name: "Clothes", id: '234'},
-        {name: "Electronics", id: '234'},
-        {name: "Toys", id: '234'},
-    ])
 
 
     return (
         <View className="">
             <TopHeader title="Back Profile" onAction={() => navigation.navigate("Profile")}/>
-            <View className="py-6">
 
-                <Text className="font-semibold text-2xl text-center">Add Product</Text>
+            <ScrollView className="px-4 py-4" >
+
+                <View className="flex flex-row justify-center">
+                    <Image source={require("../../assets/product-return.png")} style={{width: 70, height: 70}}/>
+                </View>
+
+                <Text className="font-semibold text-xl text-center">Add Product</Text>
+
 
                 <View className="mt-4">
                     {status.isLoading && <ActivityIndicator size="large" color={Colors.primary400}/>}
@@ -80,13 +95,18 @@ const AddProduct = ({navigation}) => {
                         <Text className="bg-red-100 text-red-700 px-4 py-2 rounded m-10">{status.message}</Text>)}
                 </View>
 
-                <View className="mt-4 px-4">
-
-                    <AppForm validationSchema={validationSchema} onSubmit={handleSave} initialValues={{
+                <View>
+                    <AppForm
+                        validationSchema={validationSchema}
+                        onSubmit={handleSave}
+                        initialValues={{
                         title: "",
-                        price: 0,
-                        stock: 0,
-                        category: null
+                        price: "",
+                        stock: "",
+                        category: null,
+                        thumb: "",
+                        images: [],
+                        description: ""
                     }}>
                         <>
                             <AppFormField
@@ -100,29 +120,65 @@ const AddProduct = ({navigation}) => {
                                 data={categories}
                                 labelKeyName="name"
                                 name="category"
+                                onPress={()=>dispatch(getAllCategories())}
                                 icon="apps"
                                 placeholder="Category"
                             />
+                            <AppFormPicker
+                                data={brands}
+                                labelKeyName="name"
+                                onPress={()=>dispatch(getAllBrandsAction())}
+                                name="brand"
+                                icon="library"
+                                placeholder="Brand"
+                            />
 
                             <AppFormField
-                                icon="cube"
+                                icon="currency-usd"
                                 keyboardType="numeric"
                                 placeholder="Price"
+                                maxLength={8}
                                 name="price"
                             />
 
                             <AppFormField
-                                icon="cube"
+                                icon="bookmark"
                                 placeholder="Stock"
                                 keyboardType="numeric"
+                                maxLength={3}
                                 name="stock"
                             />
+
+                            <AppFormField
+                                icon="cube"
+                                placeholder="description"
+                                numberOfLines={3}
+                                maxLength={500}
+                                multiline={true}
+                                name="description"
+                            />
+
+                            <AppFormImagePicker
+                                icon="cube"
+                                placeholder="Choose Thumb"
+                                name="thumb"
+                            />
+
+                            <AppFormImagePicker
+                                icon="cube"
+                                multiple={true}
+                                placeholder="Choose Images"
+                                name="images"
+                            />
+
                             <FormSubmit style={{
                                 marginTop: 10,
                                 paddingVertical: 14,
                                 borderRadius: 100,
                                 justifyContent: "center"
                             }} title="Add"/>
+
+
                         </>
 
                         {/*<ImageInputList imageUris={} onAddImage={} onRemoveImage={} />*/}
@@ -130,7 +186,10 @@ const AddProduct = ({navigation}) => {
                     </AppForm>
                 </View>
 
-            </View>
+                <View style={{height: 60}}></View>
+
+            </ScrollView>
+
         </View>
     );
 };

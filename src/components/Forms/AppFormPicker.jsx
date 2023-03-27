@@ -5,18 +5,48 @@ import {View} from "react-native";
 import AppPicker from "../AppPicker";
 
 
-const AppFormField = ({data, name, ...attr}) => {
+const AppFormField = ({data, multiple = false, onRemove, name, labelKeyName="name", onPress, ...attr}) => {
     const {setFieldValue, errors, values, touched, setFieldTouched} = useFormikContext()
+
+
+    function handleToggleElement(item){
+        let val = values[name] || []
+        let existIndex = val.findIndex((ele)=>ele[labelKeyName] === item[labelKeyName])
+        if(existIndex === -1){
+            val.push(item)
+        } else{
+            val.splice(existIndex, 1)
+        }
+        setFieldValue(name, val)
+    }
+
+
 
     return (
         <View>
-            <AppPicker
-                data={data}
-                onSelectItem={(item)=>setFieldValue(name, item)}
-                onBlur={() => setFieldTouched(name)}
-                selectedItem={values[name]}
-                {...attr}
-            />
+            {multiple ? (
+                <AppPicker
+                    multiple={multiple}
+                    data={data}
+                    onSelectItem={handleToggleElement}
+                    onBlur={() => setFieldTouched(name)}
+                    selectedItem={values[name]}
+                    labelKeyName={labelKeyName}
+                    onPress={onPress}
+                    {...attr}
+                />
+            ) : (
+                <AppPicker
+                    data={data}
+                    onSelectItem={(item)=> setFieldValue(name, item)}
+                    onBlur={() => setFieldTouched(name)}
+                    selectedItem={values[name]}
+                    labelKeyName={labelKeyName}
+                    onPress={onPress}
+                    {...attr}
+                />
+            )}
+
             <ErrorMessage error={errors[name]} visible={touched[name]}/>
         </View>
     );

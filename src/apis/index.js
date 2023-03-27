@@ -20,6 +20,7 @@ api.interceptors.request.use(async function (config) {
     return Promise.reject(error);
 });
 
+
 // // Add a response interceptor
 // api.interceptors.response.use(function (response) {
 //     // Any status code that lie within the range of 2xx cause this function to trigger

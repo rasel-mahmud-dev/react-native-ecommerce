@@ -13,11 +13,11 @@ const Colors = {
     secondary: "#39ec2c",
 
 
-    red10: "#a9c3ff",
-    red50: "#8eb1ff",
-    red100: "#75a0ff",
-    red200: "#5f8efc",
-    red300: "#4b80fa",
+    red10: "rgba(255,92,92,0.24)",
+    red50: "#ee6767",
+    red100: "#fa6e6e",
+    red200: "#e17171",
+    red300: "#e17171",
     red400: "#E81C1CCC",
     red500: "rgba(217,15,15,0.8)",
     red600: "#1e55d7",

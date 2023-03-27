@@ -1,12 +1,15 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getAllCategories, getAllProductAction} from "../actions/productAction";
+import {getAllProductAction} from "../actions/productAction";
+import {getAllBrandsAction} from "../actions/brandAction";
+import {getAllCategories} from "../actions/categoryAction";
 
 
 const productSlice = createSlice({
     name: "productState",
     initialState: {
         products: [],
-        categories: []
+        categories: [],
+        brands: []
     },
     reducers: {
         clearProducts(state){
@@ -24,6 +27,13 @@ const productSlice = createSlice({
         builder.addCase(getAllCategories.fulfilled, (state, action) => {
             if (action.payload) {
                 state.categories = action.payload
+            }
+        })
+
+
+        builder.addCase(getAllBrandsAction.fulfilled, (state, action) => {
+            if (action.payload) {
+                state.brands = action.payload
             }
         })
 

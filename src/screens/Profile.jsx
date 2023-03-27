@@ -5,6 +5,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import {useSelector} from "react-redux";
 import Colors from "../colors";
 import Button from "../components/Button";
+import withAuth from "../HOC/withAuth";
 
 
 
@@ -14,8 +15,6 @@ const Profile = ({navigation}) => {
 
 
     const spacing = '1.25rem';
-
-
 
     return (
         <View>
@@ -27,8 +26,8 @@ const Profile = ({navigation}) => {
                         }}/>
 
                         <View className="flex flex-row items-center mt-2">
-                            <Text className="text-xl font-medium" style={Colors.c40}>{auth.firstName}</Text>
-                            <Text className="text-xl font-medium" style={Colors.c300}>{auth.lastName}</Text>
+                            <Text className="text-xl font-medium" style={{color:Colors.c40}}>{auth.firstName}</Text>
+                            <Text className="text-xl font-medium" style={{color: Colors.c300}}>{auth.lastName}</Text>
                         </View>
 
                         <Text className="text-sm font-medium" style={{color: Colors.c100}}>{auth.email}</Text>
@@ -39,7 +38,7 @@ const Profile = ({navigation}) => {
                     </View>
                 ) : (
                     <View style={{backgroundColor: Colors.primary400}}>
-                        <Pressable style={{marginHorizontal: 10}} onPress={()=>navigation.navigate("Login")}>Login</Pressable>
+                        <Pressable style={{marginHorizontal: 10}} onPress={()=>navigation.navigate("Login")}><Text>Login</Text></Pressable>
                     </View>
                 ) }
             </View>
@@ -49,6 +48,7 @@ const Profile = ({navigation}) => {
                 <View style={{flexDirection: "row"}}>
                     <Button style={{marginHorizontal: 10}} onPress={()=>navigation.navigate("Add-Product")}>Add Product</Button>
                     <Button style={{marginHorizontal: 5}} onPress={()=>navigation.navigate("Add-Category")}>Add Category</Button>
+                    <Button style={{marginHorizontal: 5}} onPress={()=>navigation.navigate("Add-Brand")}>Add Brand</Button>
                 </View>
             </View>
 
@@ -58,4 +58,4 @@ const Profile = ({navigation}) => {
 
 
 
-export default Profile;
+export default withAuth(Profile);

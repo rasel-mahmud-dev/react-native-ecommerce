@@ -26,6 +26,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {MainScreen} from "./src/screens/MainScreen";
 import AddCategory from "./src/screens/AddCategory";
 import * as ImagePicker from "expo-image-picker";
+import AddBrand from "./src/screens/AddBrand";
 
 
 const App = () => {
@@ -64,13 +65,14 @@ const App = () => {
             <Provider store={store}>
                 <AppWrapper>
                     <NavigationContainer>
-                        <Stack.Navigator initialRouteName="Add-Product">
+                        <Stack.Navigator initialRouteName="Home">
                             <Stack.Screen name="Home" component={MainScreen} options={{headerShown: false}}/>
                             <Stack.Screen name="Login" component={Login} options={{headerShown: false}}/>
                             <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
                             <Stack.Screen name="Profile" component={Profile} options={{headerShown: false}}/>
                             <Stack.Screen name="Add-Product" component={AddProduct} options={{headerShown: false}}/>
                             <Stack.Screen name="Add-Category" component={AddCategory} options={{headerShown: false}}/>
+                            <Stack.Screen name="Add-Brand" component={AddBrand} options={{headerShown: false}}/>
                         </Stack.Navigator>
                     </NavigationContainer>
 

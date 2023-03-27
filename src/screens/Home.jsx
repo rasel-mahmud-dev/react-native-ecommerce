@@ -1,13 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, Image, FlatList, StyleSheet, Pressable} from "react-native";
+import {View, Text, Image, FlatList, StyleSheet, Pressable, Modal} from "react-native";
 import {useDispatch, useSelector} from "react-redux";
-import fullImagePath from "../utills/fullImagePath";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {getAllCategories, getAllProductAction} from "../store/actions/productAction";
+import { getAllProductAction} from "../store/actions/productAction";
 import Colors from "../colors";
 import {clearProducts} from "../store/slices/productSlice"
 import ImageInput from "../components/Images/ImageInput";
 import ImageInputList from "../components/Images/ImageInputList";
+import {getAllBrandsAction} from "../store/actions/brandAction";
+import {getAllCategories} from "../store/actions/categoryAction";
+import fullImagePath from "../utills/fullImagePath";
+import Header from "../components/Header";
+import HeaderCategoryView from "../components/HeaderCategoryView";
+import SearchProduct from "./SearchProduct";
 
 const Home = ({navigation}) => {
 
@@ -17,12 +21,14 @@ const Home = ({navigation}) => {
     const dispatch = useDispatch()
 
     const [refreshing, setRefreshing] = useState(false)
+    const [isOpenSearchProduct, setOpenSearchProduct] = useState(false)
 
 
     useEffect(() => {
-
         dispatch(getAllProductAction())
+
         dispatch(getAllCategories())
+        dispatch(getAllBrandsAction())
 
         return () => {
 
@@ -36,6 +42,7 @@ const Home = ({navigation}) => {
     function handleRefresh(data){
         dispatch(clearProducts())
         dispatch(getAllProductAction())
+        dispatch(getAllCategories())
     }
 
     const [imageUris, setImageUris] = useState([])
@@ -54,11 +61,13 @@ const Home = ({navigation}) => {
             {/*<Button onPress={()=>navigation.navigate("Profile")}>Profile</Button>*/}
             {/*<Button onPress={()=>navigation.navigate("Add-Product")}>Add</Button>*/}
 
-            <ImageInputList
-                imageUris={imageUris}
-                onAddImage={handleAddImage}
-                onRemoveImage={handleRemoveImage}
-            />
+            {/*<ImageInputList*/}
+            {/*    imageUris={imageUris}*/}
+            {/*    onAddImage={handleAddImage}*/}
+            {/*    onRemoveImage={handleRemoveImage}*/}
+            {/*/>*/}
+
+            <Header onOpenSearchProductModal={()=>setOpenSearchProduct(true)} />
 
             <View className="my-4">
 
@@ -66,50 +75,44 @@ const Home = ({navigation}) => {
                 {/*    ({products.length})*/}
                 {/*</Text>*/}
 
-
-
                 <View className="mx-2">
 
 
-                {/*<View>*/}
-                {/*    {categories?.map((category)=>(*/}
-                {/*        <View>*/}
-                {/*            <Text>{category.name}</Text>*/}
-                {/*        </View>*/}
-                {/*    ))}*/}
-                {/*</View>*/}
+                    <HeaderCategoryView categories={categories} />
 
 
+                    <FlatList renderItem={({item, index}) => (
+                        <View style={styles.grid}
+                              key={index}>
+                            <Pressable style={styles.btn} android_ripple={{color: Colors.primary100}} onPress={handleGoDetail}>
+                                <View className="flex-1">
+                                    <Image  resizeMode="contain"  style={styles.gridImage}  source={{
+                                        uri: fullImagePath(item.thumb)
+                                    }}/>
+                                </View>
 
-                    {/*<FlatList renderItem={({item, index}) => (*/}
-                    {/*    <View style={styles.grid}*/}
-                    {/*          key={index}>*/}
-                    {/*        <Pressable style={styles.btn} android_ripple={{color: Colors.primary100}} onPress={handleGoDetail}>*/}
-                    {/*            <View className="flex-1">*/}
-                    {/*                <Image style={{width: 100, height: 100}}  source={{*/}
-                    {/*                    uri: fullImagePath(item.image)*/}
-                    {/*                }}/>*/}
-                    {/*            </View>*/}
+                                <View className="mt-2">
+                                    <Text style={{color: Colors.c800}}>{item.title}</Text>
+                                    <Text style={{color: Colors.c800}}>Tk.{item.price}</Text>
+                                </View>
+                            </Pressable>
+                        </View>
+                    )}
+                              data={products}
+                              numColumns={3}
+                              refreshing={refreshing}
+                              onRefresh={handleRefresh}
+                    >
 
-                    {/*            <View className="mt-2">*/}
-                    {/*                <Text style={{color: Colors.c800}}>{item.title}</Text>*/}
-                    {/*                <Text style={{color: Colors.c800}}>Tk.{item.price}</Text>*/}
-                    {/*            </View>*/}
-                    {/*        </Pressable>*/}
-                    {/*    </View>*/}
-                    {/*)}*/}
-                    {/*          data={products}*/}
-                    {/*          numColumns={2}*/}
-                    {/*          refreshing={refreshing}*/}
-                    {/*          onRefresh={handleRefresh}*/}
-                    {/*>*/}
-
-                    {/*</FlatList>*/}
+                    </FlatList>
 
                 </View>
 
-
             </View>
+
+            <Modal animationType="slide"  visible={isOpenSearchProduct}>
+                <SearchProduct onCloseSearchProductModal={()=>setOpenSearchProduct(false)} />
+            </Modal>
 
 
 
@@ -121,25 +124,25 @@ const Home = ({navigation}) => {
 const styles = StyleSheet.create({
     grid: {
         elevation: 4,
-        shadowColor: Colors.c700,
-        shadowOpacity: 0.25,
-        shadowRadius: 200,
+        shadowColor: Colors.c10,
+        shadowOpacity: 0.5,
         borderRadius: 10,
         flex: 1,
-        height: 180,
+        // width: "100%",
+        height: 160,
         backgroundColor: "white",
         margin: 10,
         overflow: "hidden"
-
-        // shadowOffset: {width: 0, height: 100}
     },
     btn:{
         flex: 1,
-        padding: 16,
-
-
+        padding: 10
+    },
+    gridImage:{
+        width: "100%",
+        height:  "100%",
     }
 })
 
 
-export default Home;
+export default Home

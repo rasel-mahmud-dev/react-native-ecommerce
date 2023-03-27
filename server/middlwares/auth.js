@@ -8,7 +8,7 @@ async function auth(req, res, next){
     try{
 
         let data = jwt.decode(token, process.env.JWT_SECRET)
-        if(!data){
+        if(!data || !data._id){
             return res.status(409).json({message: "Please login first"})
         }
 
@@ -21,7 +21,6 @@ async function auth(req, res, next){
     } catch(ex){
         return res.status(409).send("Please login first")
     }
-
 
 }
 

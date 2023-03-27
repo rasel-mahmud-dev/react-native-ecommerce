@@ -37,16 +37,20 @@ exports.login = async (req, res, next)=>{
 
     try{
         let user = await User.findOne({email})
+
         if(!user){
             return next("This user not register yet.")
         }
+
 
         if(user.password !== password){
             return next("Sorry, Password doesn't match")
         }
 
-        let token = jwt.sign({_id: user._id, role: "ADMIN"}, process.env.JWT_SECRET, {expiresIn: "1h"})
+        let token = jwt.sign({_id: user._id, role: user.role}, process.env.JWT_SECRET, {expiresIn: "1h"})
         user._doc["password"] = null
+
+        console.log(token)
 
         res.status(201).json({
             token,
@@ -82,7 +86,7 @@ exports.register = async (req, res, next)=>{
             return next("User registration fail")
         }
 
-        let token = jwt.sign({userId: newUser._id}, process.env.JWT_SECRET, {expiresIn: "1h"})
+        let token = jwt.sign({userId: newUser._id, role: newUser.role}, process.env.JWT_SECRET, {expiresIn: "1h"})
         newUser._doc["password"] = null
 
         res.status(201).json({
