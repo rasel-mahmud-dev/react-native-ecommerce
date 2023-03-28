@@ -24,10 +24,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.rasel_mahmud.snacka00c3b44b0e940779ef87cd83fe613bb"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "19854633-4411-469d-bedc-5d1bb24b1ab4"
+      }
+    },
+    "owner": "rasel_mahmud"
   }
 }

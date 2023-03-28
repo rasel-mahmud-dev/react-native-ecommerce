@@ -1,4 +1,5 @@
-export const backend  = "http://192.168.2.177:9000"
+// export const backend  = "http://192.168.2.177:9000"
+export const backend  = "https://react-native-ecommerce1.vercel.app"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import axios from "axios"

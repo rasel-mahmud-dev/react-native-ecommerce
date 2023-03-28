@@ -44,11 +44,11 @@ const Profile = ({navigation}) => {
             </View>
 
 
-            <View className="mt-10 px-5">
+            <View className="mt-10">
                 <View style={{flexDirection: "row"}}>
-                    <Button style={{marginHorizontal: 10}} onPress={()=>navigation.navigate("Add-Product")}>Add Product</Button>
-                    <Button style={{marginHorizontal: 5}} onPress={()=>navigation.navigate("Add-Category")}>Add Category</Button>
-                    <Button style={{marginHorizontal: 5}} onPress={()=>navigation.navigate("Add-Brand")}>Add Brand</Button>
+                    <Button style={{marginHorizontal: 10, height: 80, justifyContent: "center"}} onPress={()=>navigation.navigate("Add-Product")}>Add Product</Button>
+                    <Button style={{marginHorizontal: 5, height: 80, justifyContent: "center"}} onPress={()=>navigation.navigate("Add-Category")}>Add Category</Button>
+                    <Button style={{marginHorizontal: 5, height: 80, justifyContent: "center"}} onPress={()=>navigation.navigate("Add-Brand")}>Add Brand</Button>
                 </View>
             </View>
 
